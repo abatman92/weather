@@ -6,6 +6,7 @@ import { faSpinner, faTriangleExclamation }  from '@fortawesome/free-solid-svg-i
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./styles//App.scss";
 import { FavoriteItem, SearchBlock, WeatherItem } from './components';
+import rotationModule from "./styles/rotation.module.scss"
 
 function App() {
   const dispatcher = useDispatch()
@@ -58,7 +59,7 @@ function App() {
               icon={faSpinner}
               size="6x"
               color="white"
-              className="rotation"
+              className={rotationModule.rotation}
             />
           )}
           {resultsErr && <><FontAwesomeIcon icon={faTriangleExclamation} color={"#9b1414"} size="6x" /> Не удалось получить данные о погоде</>}

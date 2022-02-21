@@ -3,6 +3,7 @@ import {faTrashCan, faSpinner}  from '@fortawesome/free-solid-svg-icons'
 import { useState } from "react";
 import style from "../styles/favoriteItem.module.scss"
 import { RemoveItemFromFavorite } from "../redux/action/cities";
+import rotationModule from "../styles/rotation.module.scss"
 
 export const FavoriteItem = ({ getWeather, name, id, dispatch }) => {
   const [isRemoving, setIsRemoving] = useState(false);
@@ -17,7 +18,7 @@ export const FavoriteItem = ({ getWeather, name, id, dispatch }) => {
       </p>
       {!isRemoving ? <button onClick={removeFromFavorite} className={style.removeFavoriteBtn}>
         <FontAwesomeIcon icon={faTrashCan} />
-      </button> : <FontAwesomeIcon icon={faSpinner} className="rotation" />}
+      </button> : <FontAwesomeIcon icon={faSpinner} className={rotationModule.rotation} />}
     </div>
   );
 };

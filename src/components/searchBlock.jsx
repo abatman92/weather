@@ -4,6 +4,7 @@ import { memo, useEffect, useRef } from "react";
 import { searchConditionAction, fetchCityNames } from "../redux/action/search";
 import style from "../styles/searchBlock.module.scss"
 import { SearchPopup } from "./searchPopup";
+import rotationModule from "../styles/rotation.module.scss"
 
 export const SearchBlock = memo(({
   getWeather,
@@ -35,7 +36,7 @@ export const SearchBlock = memo(({
         onChange={inputHandler}
         autoComplete="off"
       />
-      {isLoading && <FontAwesomeIcon icon={faSpinner} className="rotation" />}
+      {isLoading && <FontAwesomeIcon icon={faSpinner} className={rotationModule.rotation} />}
       {err && <FontAwesomeIcon icon={faTriangleExclamation} color={"#9b1414"} size="sm" />}
      <SearchPopup askForWeather={askForWeather} />
     </div>

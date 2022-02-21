@@ -6,6 +6,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { addToFavorites } from "../redux/action/cities";
 import weatherItemStyles from "../styles/weatherItem.module.scss"
+import rotationModule from "../styles/rotation.module.scss"
 
 const tempInC = (value) => Math.round(value-273.15)
 const pressureINmmHg = (value) => value * 0.75;
@@ -59,7 +60,7 @@ export const WeatherItem = (({name, main, weather, wind, coord, sys, addToFavori
         {!addToFavoritesButtonStatus && !err && (
           <button className={weatherItemStyles.addToFavoritesButton} onClick={addToFav}>
             {isAddigToFavorites ? (
-              <FontAwesomeIcon icon={faSpinner} className="rotation" />
+              <FontAwesomeIcon icon={faSpinner} className={rotationModule.rotation} />
             ) : (
               <FontAwesomeIcon icon={faPlus} />
             )}

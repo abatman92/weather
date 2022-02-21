@@ -23,7 +23,7 @@ export const results = (state = initialState, action) => {
         case setResultsErr: {
           return {
             ...state,
-            resultsErr: true,
+            resultsErr: action.payload,
           };
         }
         default: {
