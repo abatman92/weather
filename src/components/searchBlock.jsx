@@ -1,7 +1,7 @@
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faSpinner, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { memo, useEffect, useRef } from "react";
-import { searchCondition, fetchCityNames } from "../redux/action/search";
+import { searchConditionAction, fetchCityNames } from "../redux/action/search";
 import style from "../styles/searchBlock.module.scss"
 import { SearchPopup } from "./searchPopup";
 
@@ -9,11 +9,12 @@ export const SearchBlock = memo(({
   getWeather,
   dispatcher,
   isLoading,
-  currentText
+  currentText,
+  err
 }) => {
   const cityName = useRef();
   const inputHandler = () => {
-    dispatcher(searchCondition(cityName.current.value));
+    dispatcher(searchConditionAction(cityName.current.value));
   };
   ;
   useEffect(() => {
@@ -21,7 +22,7 @@ export const SearchBlock = memo(({
   }, [currentText]);
   const askForWeather =(value) => {
     getWeather(value);
-    dispatcher(searchCondition(""));
+    dispatcher(searchConditionAction(""));
   };
   return (
     <div className={style.searchContainer}>
@@ -35,6 +36,7 @@ export const SearchBlock = memo(({
         autoComplete="off"
       />
       {isLoading && <FontAwesomeIcon icon={faSpinner} className="rotation" />}
+      {err && <FontAwesomeIcon icon={faTriangleExclamation} color={"#9b1414"} size="sm" />}
      <SearchPopup askForWeather={askForWeather} />
     </div>
   );

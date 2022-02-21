@@ -1,5 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faPlus, faSpinner}  from '@fortawesome/free-solid-svg-icons'
+import {
+  faPlus,
+  faSpinner,
+  faTriangleExclamation,
+} from "@fortawesome/free-solid-svg-icons";
 import { addToFavorites } from "../redux/action/cities";
 import weatherItemStyles from "../styles/weatherItem.module.scss"
 
@@ -29,7 +33,7 @@ const windDestination = (num) => {
 };
 
 
-export const WeatherItem = (({name, main, weather, wind, coord, sys, addToFavoritesButtonStatus, isAddigToFavorites, dispatcher}) => {
+export const WeatherItem = (({name, main, weather, wind, coord, sys, addToFavoritesButtonStatus, isAddigToFavorites, dispatcher, err}) => {
     
     const addToFav = () => dispatcher(addToFavorites({name, ...coord, country: sys.country}))
     return (
@@ -52,16 +56,19 @@ export const WeatherItem = (({name, main, weather, wind, coord, sys, addToFavori
         <p>
           Ветер {wind.speed}м/с, {windDestination(wind.deg)}
         </p>
-        {!addToFavoritesButtonStatus && (
+        {!addToFavoritesButtonStatus && !err && (
           <button className={weatherItemStyles.addToFavoritesButton} onClick={addToFav}>
             {isAddigToFavorites ? (
               <FontAwesomeIcon icon={faSpinner} className="rotation" />
             ) : (
               <FontAwesomeIcon icon={faPlus} />
-            )}{" "}
+            )}
             в избранное
           </button>
         )}
+        {
+          err && <p className={weatherItemStyles.addToFavoritesButton}><FontAwesomeIcon icon={faTriangleExclamation} color={"#9b1414"} size="sm" /> Не удалосьдобавить</p>
+        }
       </div>
     );
 })

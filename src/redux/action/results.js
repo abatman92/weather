@@ -1,20 +1,26 @@
 import { weather } from "../../apiInstance"
+import { AddResult, SetIsRecieving, setResultsErr } from "../constants"
 
 const setWeatherItems = (item) => ({
-    type: "AddResult",
+    type: AddResult,
     payload: item
 })
 
-const SetIsRecieving = (boolean) => ({
-    type: "SetIsRecieving",
+const SetIsRecievingAction = (boolean) => ({
+    type: SetIsRecieving,
     payload: boolean
 }) 
 
-export const addResult = (name) => async (dispatch) => {
-    dispatch(SetIsRecieving(true))
-    const res = await weather(
-      `/2.5/weather?q=${name.toLowerCase()}&appid=45862d988ee898246d81c466820f362b`
-    );
+export const addResultAction = (name) => async (dispatch) => {
+    dispatch(SetIsRecievingAction(true))
+    try {
+        const res = await weather(
+          `/2.5/weather?q=${name.toLowerCase()}&appid=45862d988ee898246d81c466820f362b`
+        );
     dispatch(setWeatherItems(res.data))
-    dispatch(SetIsRecieving(false))
+    } catch (e) {
+        dispatch({type: setResultsErr})
+        dispatch(setWeatherItems({}))
+    }
+    dispatch(SetIsRecievingAction(false))
 }

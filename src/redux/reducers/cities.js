@@ -1,14 +1,16 @@
-const initialState = { cities: [], isAddigToFavorites: false };
+import { AddCity, AddCityToReducer, RemoveFromFavorite, setAddCityErr, setCitiesErr, setIsAddingToFavorites } from "../constants";
+
+const initialState = { cities: [], isAddigToFavorites: false, citiesErr: false, addErr: false };
 
 export const cities = (state = initialState, action) => {
   switch (action.type) {
-    case "AddCity": {
+    case AddCity: {
       return {
         ...state,
         cities: [...state.cities, action.payload],
       };
     }
-    case "RemoveFromFavorite": {
+    case RemoveFromFavorite: {
       const newArr = state.cities.filter(
         (item) => item.name !== action.payload
       );
@@ -17,17 +19,29 @@ export const cities = (state = initialState, action) => {
         cities: newArr,
       };
     }
-    case "AddCityToReducer": {
+    case AddCityToReducer: {
       return {
         ...state,
         cities: action.payload,
       };
     }
-    case "setIsAddingToFavorites": {
+    case setIsAddingToFavorites: {
       return {
         ...state,
         isAddigToFavorites: action.payload,
       };
+    }
+    case setCitiesErr: {
+      return {
+        ...state,
+        citiesErr: true
+      }
+    }
+    case setAddCityErr: {
+      return {
+        ...state,
+        addErr: true
+      }
     }
     default: {
       return state;

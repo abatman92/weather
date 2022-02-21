@@ -1,41 +1,54 @@
 import { backend} from "../../apiInstance"
+import { AddCity, AddCityToReducer, RemoveFromFavorite, setAddCityErr, setCitiesErr, setIsAddingToFavorites } from "../constants"
 
-export const AddCity = (cityObj) => ({
-    type: "AddCity",
+export const AddCityAction = (cityObj) => ({
+    type: AddCity,
     payload: cityObj
 })
 
-export const RemoveFromFavorite = (value) => ({
-    type: "RemoveFromFavorite",
+export const RemoveFromFavoriteAction = (value) => ({
+    type: RemoveFromFavorite,
     payload: value
 })
 
-const AddCityToReducer = (arr) => ({
-    type: "AddCityToReducer",
+const AddCityToReducerAction = (arr) => ({
+    type: AddCityToReducer,
     payload: arr
 })
 
 export const FetchCities = () => async (dispatch) => {
-    const res = await backend.get("cities")
-    dispatch(AddCityToReducer(res.data))
+    try {
+        const res = await backend.get("cities")
+        dispatch(AddCityToReducerAction(res.data))
+    } catch {
+        dispatch(setCitiesErrType)
+    }
 }
 
-const setIsAddingToFavorites = (boolean) => ({
-    type: "setIsAddingToFavorites",
+const setIsAddingToFavoritesAction = (boolean) => ({
+    type: setIsAddingToFavorites,
     payload: boolean
 })
 
 export const addToFavorites = (item) => async (dispatch) => {
-  dispatch(setIsAddingToFavorites(true));
-  const res = await backend.post(
-    "cities",
-    item
-  );
-  dispatch(AddCity(res.data));
-  dispatch(setIsAddingToFavorites(false));
+  dispatch(setIsAddingToFavoritesAction(true));
+  try {
+    const res = await backend.post("cities", item);
+    dispatch(AddCityAction(res.data));
+  } catch {
+    dispatch({type: setAddCityErr})
+  }
+  dispatch(setIsAddingToFavoritesAction(false));
 }
 
 export const RemoveItemFromFavorite = (val, id) => async (dispatch) => {
-    await backend.delete(`cities/${id}`)
-    dispatch(RemoveFromFavorite(val));
+    try {
+      await backend.delete(`cities/${id}`);
+      dispatch(RemoveFromFavoriteAction(val));
+    } catch {
+      dispatch(setCitiesErrType);
+    };
   }
+
+const setCitiesErrType = { type: setCitiesErr }
+

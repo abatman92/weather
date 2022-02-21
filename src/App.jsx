@@ -1,18 +1,18 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { addResult } from './redux/action/results';
+import { addResultAction } from './redux/action/results';
 import { useEffect } from 'react';
 import { FetchCities } from './redux/action/cities';
-import { faSpinner}  from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faTriangleExclamation }  from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./styles//App.scss";
 import { FavoriteItem, SearchBlock, WeatherItem } from './components';
 
 function App() {
   const dispatcher = useDispatch()
-  const {cities, isAddigToFavorites} = useSelector(({cities}) => cities)
-  const { weatherResult, isRecieving } = useSelector(({ results }) => results);
-  const { isLoading, currentText } = useSelector(({search}) => search)
-  const getWeather = (name) => dispatcher(addResult(name))
+  const { cities, isAddigToFavorites, citiesErr, addErr } = useSelector(({cities}) => cities)
+  const { weatherResult, isRecieving, resultsErr } = useSelector(({ results }) => results);
+  const { isLoading, currentText, searchErr } = useSelector(({search}) => search)
+  const getWeather = (name) => dispatcher(addResultAction(name))
   const favoriteCities = cities.map(item => <FavoriteItem key={item.name} getWeather={getWeather} name={item.name} id={item.id} dispatch={dispatcher} />)
   const checkForObjectInCities = (value) => {
     return cities.some(item => item.name.toLowerCase() === value.toLowerCase())
@@ -20,21 +20,27 @@ function App() {
   useEffect(() => {
     dispatcher(FetchCities())
   }, []);
-  
   return (
-    <div className='App'>
-      <header className='App-header'>
+    <div className="App">
+      <header className="App-header">
         <h2 htmlFor="cityInput">Выбрать город</h2>
         <SearchBlock
           getWeather={getWeather}
           dispatcher={dispatcher}
           isLoading={isLoading}
           currentText={currentText}
+          err={searchErr}
         />
-        <h2 className='favoritesHeading'>Избранное:</h2>
-        {favoriteCities}
+        <h2 className="favoritesHeading">Избранное:</h2>
+        {!citiesErr && favoriteCities}
+        {citiesErr && (
+          <>
+            <FontAwesomeIcon icon={faTriangleExclamation} color={"#9b1414"} size="sm" /> Что-то пошло не
+            так...<br/>Не удалось получить список избранных городов
+          </>
+        )}
       </header>
-      <div className='weatherContainer'>
+      <div className="weatherContainer">
         <div>
           {weatherResult.name && !isRecieving && (
             <WeatherItem
@@ -43,10 +49,19 @@ function App() {
               )}
               dispatcher={dispatcher}
               isAddigToFavorites={isAddigToFavorites}
+              err={addErr}
               {...weatherResult}
             />
           )}
-          {isRecieving && <FontAwesomeIcon icon={faSpinner} size="6x" color='white' className="rotation" />}
+          {isRecieving && (
+            <FontAwesomeIcon
+              icon={faSpinner}
+              size="6x"
+              color="white"
+              className="rotation"
+            />
+          )}
+          {resultsErr && <><FontAwesomeIcon icon={faTriangleExclamation} color={"#9b1414"} size="6x" /> Не удалось получить данные о погоде</>}
         </div>
       </div>
     </div>
