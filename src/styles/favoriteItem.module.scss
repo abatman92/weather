@@ -1,0 +1,31 @@
+.favoriteItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 20px;
+    line-height: 1.2;
+    margin-top: 8px;
+    p {
+        cursor: pointer;
+        &:hover {
+            opacity: .8;
+        }
+      }
+}
+
+.removeFavoriteBtn {
+    cursor: pointer;
+    img {
+        width: 25px;
+        object-fit: contain;
+      }
+    svg {
+        height: 25px;
+        color: white;
+        &:hover {
+            opacity: .8;
+        }
+    }
+  }
+
+  
